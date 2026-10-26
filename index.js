@@ -48,6 +48,10 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server
-app.listen(port, async () => {
-  console.log(`Example app listening on port ${port}`);
-});
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, async () => {
+    console.log(`Example app listening on port ${port}`);
+  });
+}
+
+module.exports = app;
