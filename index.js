@@ -19,9 +19,29 @@ const authenticationRouters = require("./modules/users/auth.route");
 // Middleware setup
 app.use(morgan("combined"));
 app.use(cookies());
+const allowedOrigins = [
+  "https://dacsantuhuong.food",
+  "https://food-client.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:5173",
+];
+
+// Nếu CLIENT_URL có giá trị và chưa có trong danh sách thì thêm vào
+if (process.env.CLIENT_URL && !allowedOrigins.includes(process.env.CLIENT_URL)) {
+  allowedOrigins.push(process.env.CLIENT_URL);
+}
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: function (origin, callback) {
+      // Cho phép request không có origin (ví dụ: Mobile app, Postman, server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Blocked by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
