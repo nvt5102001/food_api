@@ -2,9 +2,11 @@ const orderService = require("./order.service");
 
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await orderService.getAllOrders();
+    const userId = req.user?.id;
+    const orders = await orderService.getAllOrders(userId);
     res.json(orders);
   } catch (error) {
+    console.error("Get orders error:", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -23,9 +25,14 @@ const getOrderById = async (req, res) => {
 
 const createOrder = async (req, res) => {
   try {
-    const order = await orderService.createOrder(req.body);
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "User not authenticated" });
+    }
+    const order = await orderService.createOrder(userId, req.body);
     res.status(201).json(order);
   } catch (error) {
+    console.error("Create order error:", error);
     res.status(500).json({ error: error.message });
   }
 };

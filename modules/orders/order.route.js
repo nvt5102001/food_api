@@ -1,10 +1,11 @@
 const router = require("express").Router();
 const orderController = require("./order.controller");
+const auth = require("../../middlewares/auth");
 
-router.get("/", orderController.getAllOrders);
-router.get("/:id", orderController.getOrderById);
-router.post("/", orderController.createOrder);
-router.put("/:id", orderController.updateOrder);
-router.delete("/:id", orderController.deleteOrder);
+router.get("/", auth, orderController.getAllOrders);
+router.get("/:id", auth, orderController.getOrderById);
+router.post("/", auth, orderController.createOrder);
+router.put("/:id", auth, orderController.updateOrder);
+router.delete("/:id", auth, orderController.deleteOrder);
 
 module.exports = router;

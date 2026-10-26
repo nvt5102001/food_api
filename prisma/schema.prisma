@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
@@ -153,6 +153,7 @@ model users {
   created_at   DateTime?   @default(now()) @db.Timestamp(6)
   updated_at   DateTime?   @db.Timestamp(6)
   deleted_at   DateTime?   @db.Timestamp(6)
+  name         String?
   address      address[]
   cart         cart[]
   orders       orders[]
