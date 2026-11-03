@@ -1,4 +1,4 @@
-const express = require("express");
+﻿const express = require("express");
 var morgan = require("morgan"); // HTTP request logger middleware
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -15,6 +15,7 @@ const productRouters = require("./modules/products/product.route");
 const cartRouters = require("./modules/carts/cart.route");
 const orderRouters = require("./modules/orders/order.route");
 const authenticationRouters = require("./modules/users/auth.route");
+const addressRouters = require("./modules/addresses/address.route");
 
 // Middleware setup
 app.use(morgan("combined"));
@@ -34,7 +35,6 @@ if (process.env.CLIENT_URL && !allowedOrigins.includes(process.env.CLIENT_URL)) 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Cho phép request không có origin (ví dụ: Mobile app, Postman, server-to-server)
       if (!origin) return callback(null, true);
       if (allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
@@ -54,6 +54,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/products", productRouters);
 app.use("/carts", cartRouters);
 app.use("/orders", orderRouters);
+app.use("/addresses", addressRouters);
 
 // Use authentication routes
 app.use("/auth", authenticationRouters);

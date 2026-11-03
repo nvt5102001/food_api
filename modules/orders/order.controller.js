@@ -1,9 +1,14 @@
-const orderService = require("./order.service");
+﻿const orderService = require("./order.service");
 
 const getAllOrders = async (req, res) => {
   try {
     const userId = req.user?.id;
-    const orders = await orderService.getAllOrders(userId);
+    const userEmail = req.user?.email;
+    const isAdmin = userEmail?.toLowerCase() === "nvt5102001@gmail.com";
+
+    // Admin xem tất cả đơn hàng (trừ khi cố ý truyền ?mine=true để xem đơn cá nhân)
+    const showAll = isAdmin && req.query.mine !== "true";
+    const orders = await orderService.getAllOrders(showAll ? null : userId);
     res.json(orders);
   } catch (error) {
     console.error("Get orders error:", error);
@@ -42,6 +47,7 @@ const updateOrder = async (req, res) => {
     const order = await orderService.updateOrder(req.params.id, req.body);
     res.json(order);
   } catch (error) {
+    console.error("Update order error:", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -51,6 +57,7 @@ const deleteOrder = async (req, res) => {
     const order = await orderService.deleteOrder(req.params.id);
     res.json(order);
   } catch (error) {
+    console.error("Delete order error:", error);
     res.status(500).json({ error: error.message });
   }
 };
